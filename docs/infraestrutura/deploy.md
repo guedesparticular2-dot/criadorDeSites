@@ -21,6 +21,7 @@ Este é o registro específico do projeto. O guia institucional disponível no w
 ## Topologia preparada
 
 - Build context: raiz deste monorepo (`.`), necessária para dependências `workspace:*`.
+- A VPS tinha cerca de 1.2 GiB livres no inventário; por isso os builds são feitos fora dela para `linux/amd64`, etiquetados pelo SHA do commit e carregados como imagens. Use `docker buildx build --platform linux/amd64 --load` para cada Dockerfile e `docker compose up --no-build`; não compilar Next.js dentro do host compartilhado.
 - Serviço `web`: Next.js standalone, escuta internamente na porta `3000`.
 - Serviço `worker`: outbox e trabalhos assíncronos; compartilha o volume persistente `media_data` com `web`.
 - O servidor já possui Traefik compartilhado escutando em 80/443, ligado à rede `servicos-padrao`; o arquivo dinâmico observado usa o provider de arquivo com watch e ACME TLS challenge. O Compose do Baixada não publica portas públicas nem inicia outro proxy. A porta web `13002` fica presa a `127.0.0.1` apenas para o bootstrap privado por túnel SSH; depois da configuração inicial pode ser removida.

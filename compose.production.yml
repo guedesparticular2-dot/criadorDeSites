@@ -30,6 +30,8 @@ services:
 
   migrate:
     profiles: ["ops"]
+    image: baixada-migrate:${BAIXADA_IMAGE_TAG:-latest}
+    platform: linux/amd64
     build:
       context: .
       dockerfile: infra/docker/migrate.Dockerfile
@@ -43,6 +45,8 @@ services:
         condition: service_healthy
 
   web:
+    image: baixada-web:${BAIXADA_IMAGE_TAG:-latest}
+    platform: linux/amd64
     build:
       context: .
       dockerfile: infra/docker/web.Dockerfile
@@ -70,6 +74,8 @@ services:
         condition: service_healthy
 
   worker:
+    image: baixada-worker:${BAIXADA_IMAGE_TAG:-latest}
+    platform: linux/amd64
     build:
       context: .
       dockerfile: infra/docker/worker.Dockerfile
