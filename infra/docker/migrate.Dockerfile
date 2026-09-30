@@ -11,7 +11,7 @@ COPY packages/core/package.json packages/core/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 COPY packages/database/package.json packages/database/package.json
 
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile --filter @baixada/database
 
 COPY packages/database packages/database
 COPY infra/database infra/database
