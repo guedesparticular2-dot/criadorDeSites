@@ -16,6 +16,8 @@ uploads
 **/uploads
 backups
 **/backups
+infra/secrets
+**/secrets
 *.dump
 **/*.dump
 .DS_Store

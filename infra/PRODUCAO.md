@@ -1,16 +1,16 @@
 # Preparação de produção — VPS
 
-`compose.production.yml` é um ponto de partida para a aplicação e o proxy; ainda não representa homologação nem autorização para publicar. O PostgreSQL é externo a esse Compose (por exemplo, serviço PostgreSQL no host/VPS), sem porta publicada pelo arquivo. O usuário informado em `DATABASE_URL` deve ser o papel de runtime restrito, nunca o proprietário/migrador.
+`compose.production.yml` define web, worker e PostgreSQL dedicado do Baixada. O banco não publica porta; a rede do banco é interna. O proxy é o Traefik compartilhado da VPS e não é criado por este Compose. Este arquivo não significa que a produção esteja homologada nem autoriza tráfego público antes dos gates abaixo.
 
 ## Antes de subir
 
-1. Instalar Docker Compose, configurar firewall permitindo somente SSH administrativo, HTTP e HTTPS, e preparar o PostgreSQL com backups e WAL externos.
+1. Usar a VPS já inventariada: deployment em `/srv/apps/baixada`, conectada à rede externa `servicos-padrao`; preservar firewall/proxy existentes e não alterar serviços de outros projetos. Preparar PostgreSQL com backup/WAL externo antes de dados reais.
 2. Aplicar migrações usando uma credencial de migração separada e protegida; nunca passar essa credencial à web ou ao worker.
-3. Configurar `baixada_runtime` e confirmar seus privilégios efetivos: sem `SUPERUSER`/`BYPASSRLS`, sem acesso ao papel verificador e sem SELECT na chave HMAC. Revisar o script `infra/database/runtime-role.sql` e validar todas as políticas sob essa identidade.
-4. Criar, fora do repositório, as variáveis obrigatórias `APP_URL`, `DATABASE_URL`, `MFA_ENCRYPTION_KEY`, `RLS_CONTEXT_KEY_ID`, `RLS_CONTEXT_HMAC_KEY`, `RLS_SYSTEM_CONTEXT_KEY_ID`, `RLS_SYSTEM_CONTEXT_HMAC_KEY`, `APP_DOMAINS` e `TLS_EMAIL`. Usar chave MFA aleatória de 32 bytes codificada em base64url e guardá-la em backup seguro: perdê-la impede decifrar fatores MFA existentes. Usar segredos HMAC distintos para web e worker (mínimo 32 caracteres), inserindo cada segredo em `app.rls_context_keys` sob credencial de migração e limitando seus escopos a `PUBLIC,TENANT,PLATFORM,REGISTRATION,TOKEN,PASSWORD_RESET` para web e `SYSTEM` para worker.
-5. Até o Resend estar configurado, manter `EMAIL_PROVIDER=console`; isso não valida entrega real. Para produção com e-mail, configurar `EMAIL_PROVIDER=resend`, `EMAIL_FROM` verificado e chave exclusiva do Baixada.
+3. Configurar `baixada_runtime` e o login `baixada_runtime_login`; confirmar privilégios efetivos: sem `SUPERUSER`/`BYPASSRLS`, sem associação ao papel verificador e sem leitura da chave HMAC. Revisar os scripts de roles e validar políticas sob essa identidade.
+4. Criar em `infra/secrets/` (root-only, não commitado) os arquivos `postgres.env`, `migrator.env`, `web.env` e `worker.env`. Web e worker precisam de HMAC distintos, mínimo 32 caracteres, cadastrados em `app.rls_context_keys` com escopos mínimos. Criar chave MFA aleatória de 32 bytes codificada em base64url e guardá-la em backup seguro: perdê-la impede decifrar fatores MFA existentes.
+5. Configurar `EMAIL_PROVIDER=resend`, remetente verificado `Baixada Futsal Clube <nao-responda@baixadafc.com.br>`, `EMAIL_REPLY_TO=baixadafc5@gmail.com` e chave exclusiva do Baixada. Não reutilizar chave de outro projeto.
 6. Preparar o diretório/volume de mídia, backups externos, alertas de disco e teste de restauração antes de receber uploads reais.
-7. Verificar DNS A/AAAA dos domínios para a VPS. Caddy só emitirá certificados quando DNS e portas públicas estiverem corretos.
+7. Apontar apex por A para o IPv4 da VPS e `www` por CNAME para apex; o Traefik compartilhado fornecerá HTTPS e redirect de `www` para o domínio canônico quando DNS já tiver propagado.
 
 ## Verificação local do Compose
 
@@ -33,7 +33,7 @@ O alvo específico, domínio, topologia, checklist e dados de VPS ainda pendente
 
 ## Ainda exige ambiente/decisão externa
 
-- Destino e credenciais de backup externo, arquivo contínuo de WAL, retenção, alertas e restauração real.
+- OAuth para o Drive de `baixadafc5@gmail.com` (a sessão atualmente conectada corresponde a outra conta), backup criptografado, WAL contínuo, retenção, alertas e restauração real.
 - Domínios/DNS, firewall, certificado TLS e teste externo.
 - Remetente e chave Resend exclusivos, com teste real de entrega.
 - Homologação jurídica da política LGPD e UAT com contas/tenants de teste.

@@ -78,7 +78,7 @@ export function DomainManager({ domains, tenants }: { domains: PlatformDomain[];
     </section>}
 
     <section className="panel form-panel"><header><div><span className="eyebrow dark">NOVO DOMÍNIO</span><h2>Vincular hostname</h2></div></header>
-      <p className="platform-finance-note">Depois da prova de posse, o hostname também precisa ser incluído em <code>APP_DOMAINS</code> no proxy Caddy e responder por HTTPS válido antes da ativação canônica. O painel não altera DNS, proxy ou certificados.</p>
+      <p className="platform-finance-note">Depois da prova de posse, o hostname também precisa receber uma rota no Traefik compartilhado e responder por HTTPS válido antes da ativação canônica. O painel não altera DNS, proxy ou certificados.</p>
       <form onSubmit={createChallenge} className="form-grid">
         <label>Instância<select name="tenantId" required defaultValue=""><option value="" disabled>Selecione o tenant</option>{tenants.map((tenant) => <option key={tenant.id} value={tenant.id}>{tenant.displayName} · {tenant.slug}</option>)}</select></label>
         <label>Domínio<input name="hostname" placeholder="www.clube.com.br" autoCapitalize="none" autoCorrect="off" required /></label>

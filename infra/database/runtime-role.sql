@@ -21,6 +21,11 @@ grant execute on function app.can_access_tenant_data() to baixada_runtime;
 grant execute on function app.is_public_context() to baixada_runtime;
 grant execute on function app.context_claims() to baixada_runtime;
 grant select, insert, update, delete on all tables in schema public to baixada_runtime;
+grant usage, select on all sequences in schema public to baixada_runtime;
+alter default privileges for role baixada_owner in schema public
+  grant select, insert, update, delete on tables to baixada_runtime;
+alter default privileges for role baixada_owner in schema public
+  grant usage, select on sequences to baixada_runtime;
 grant select on app.rls_context_keys, users, tenant_memberships, platform_user_roles, roles,
   tenant_admin_invitations, guardian_confirmations, tenants to baixada_rls_verifier;
 

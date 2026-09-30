@@ -25,6 +25,7 @@ uploads/
 **/uploads/
 backups/
 **/backups/
+infra/secrets/
 *.dump
 **/*.dump
 *.log

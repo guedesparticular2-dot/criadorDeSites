@@ -166,7 +166,11 @@ async function sendOutboxEmail(event: OutboxEvent) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json", "Idempotency-Key": event.id },
-    body: JSON.stringify({ from: process.env.EMAIL_FROM, to: [message.to], subject: message.subject, text: message.text }),
+    body: JSON.stringify({
+      from: process.env.EMAIL_FROM,
+      ...(process.env.EMAIL_REPLY_TO ? { reply_to: process.env.EMAIL_REPLY_TO } : {}),
+      to: [message.to], subject: message.subject, text: message.text,
+    }),
     signal: AbortSignal.timeout(15_000),
   });
   if (!response.ok) throw new Error(`Resend recusou a mensagem (${response.status}).`);
@@ -302,7 +306,11 @@ async function processEmailDeliveries() {
       const response = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": delivery.id },
-        body: JSON.stringify({ from: sender, to: [delivery.email], subject: delivery.title || "Aviso do Baixada Futsal Clube", text: delivery.body || "Há uma nova notificação administrativa no painel." }),
+        body: JSON.stringify({
+          from: sender,
+          ...(process.env.EMAIL_REPLY_TO ? { reply_to: process.env.EMAIL_REPLY_TO } : {}),
+          to: [delivery.email], subject: delivery.title || "Aviso do Baixada Futsal Clube", text: delivery.body || "Há uma nova notificação administrativa no painel.",
+        }),
         signal: AbortSignal.timeout(15_000),
       });
       if (!response.ok) throw new Error(`Provedor recusou a mensagem (${response.status}): ${(await response.text()).slice(0, 1000)}`);
