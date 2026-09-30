@@ -1,0 +1,57 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: baixada
+      POSTGRES_USER: baixada
+      POSTGRES_PASSWORD: baixada
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U baixada -d baixada"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/web.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://baixada:baixada@postgres:5432/baixada
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      MFA_ENCRYPTION_KEY: ${MFA_ENCRYPTION_KEY:-}
+      MEDIA_ROOT: /data/uploads
+      MEDIA_DISK_STOP_PERCENT: 80
+    ports:
+      - "3000:3000"
+    volumes:
+      - media_data:/data/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/worker.Dockerfile
+    environment:
+      DATABASE_URL: postgresql://baixada:baixada@postgres:5432/baixada
+      APP_URL: ${APP_URL:-http://localhost:3000}
+      NODE_ENV: ${NODE_ENV:-development}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      EMAIL_FROM: ${EMAIL_FROM:-contato@example.com}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MEDIA_ROOT: /data/uploads
+      MEDIA_DISK_STOP_PERCENT: 80
+    volumes:
+      - media_data:/data/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  media_data:

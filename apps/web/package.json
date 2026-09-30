@@ -1,0 +1,25 @@
+{
+  "name": "@baixada/web",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "postbuild": "node scripts/copy-standalone-static.mjs",
+    "start": "node .next/standalone/apps/web/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@baixada/contracts": "workspace:*",
+    "@baixada/core": "workspace:*",
+    "@baixada/database": "workspace:*",
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0"
+  }
+}

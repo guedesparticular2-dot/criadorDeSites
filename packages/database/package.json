@@ -1,0 +1,16 @@
+{
+  "name": "@baixada/database",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --passWithNoTests",
+    "test:phase6-local": "tsx --tsconfig ../../tsconfig.base.json tests/phase6-smoke.ts",
+    "test:phase7-local": "tsx --tsconfig ../../tsconfig.base.json tests/phase7-smoke.ts",
+    "migrate": "tsx src/migrate.ts",
+    "generate": "echo 'SQL migrations are authoritative; no generation step required.'"
+  },
+  "dependencies": { "postgres": "^3.4.7" },
+  "devDependencies": { "tsx": "^4.20.0", "typescript": "^5.9.0", "vitest": "^3.2.0" }
+}

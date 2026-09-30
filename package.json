@@ -1,0 +1,22 @@
+{
+  "name": "baixada-fc-platform",
+  "private": true,
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @baixada/web dev",
+    "dev:worker": "pnpm --filter @baixada/worker dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "db:generate": "pnpm --filter @baixada/database generate",
+    "db:migrate": "pnpm --filter @baixada/database migrate"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  }
+}

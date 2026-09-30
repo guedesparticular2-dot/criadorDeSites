@@ -1,0 +1,91 @@
+{
+  "$schema": "https://baixada.local/schemas/theme-v1.json",
+  "code": "BAIXADA_BASE",
+  "version": 1,
+  "status": "PUBLISHED",
+  "purpose": "Tema-base institucional para provisionamento de novos tenants.",
+  "colorScheme": "light-only",
+  "fontStacks": {
+    "display": "Georgia, serif",
+    "body": "Avenir Next, Trebuchet MS, sans-serif",
+    "script": "Snell Roundhand, Brush Script MT, Segoe Script, cursive"
+  },
+  "tokens": {
+    "color.brand.navy.950": "#0B2D48",
+    "color.brand.navy.900": "#104463",
+    "color.brand.navy.800": "#1C5A7E",
+    "color.brand.blue": "#1E638C",
+    "color.brand.green": "#247348",
+    "color.brand.green.dark": "#1B5D39",
+    "color.brand.gold": "#D5B16B",
+    "color.brand.wine.700": "#7F1D32",
+    "color.brand.wine.600": "#98283F",
+    "color.surface.paper": "#FFFEFA",
+    "color.surface.editorial": "#F7F7F6",
+    "color.text.primary": "#10212D",
+    "color.text.muted": "#63717A",
+    "color.border.default": "#D9DEE0",
+    "layout.content.maxWidth": "1180px",
+    "layout.header.bandHeight": "4px",
+    "layout.sectionSeparatorHeight": "5px",
+    "layout.radius.default": "2px",
+    "motion.interaction.fast": "350ms",
+    "motion.brandShine.interval": "10s",
+    "motion.footballSpin.duration": "3s"
+  },
+  "componentDefaults": {
+    "header": {
+      "topBands": ["color.brand.blue", "color.brand.green"],
+      "bottomBorder": "color.brand.gold",
+      "brandShine": true
+    },
+    "hero": {
+      "mask": "black-gradient",
+      "welcomeStyle": "script-plus-display",
+      "primaryAction": "gold-with-green-ornament"
+    },
+    "nextGame": {
+      "topBorder": "color.brand.green",
+      "background": "color.brand.blue",
+      "watermark": "white-playbook-8-percent",
+      "detailsRoute": true
+    },
+    "stories": {
+      "imageBottomBar": "white-40-percent-40px",
+      "hover": "lift-and-image-zoom",
+      "numbering": false
+    },
+    "agenda": {
+      "topBorder": "color.brand.green",
+      "bottomBorder": "color.brand.gold"
+    },
+    "editorial": {
+      "background": "color.surface.editorial",
+      "layout": "wide-title-then-square-video-and-copy"
+    },
+    "footer": {
+      "navigation": true,
+      "separator": "color.brand.gold"
+    }
+  },
+  "tenantEditable": [
+    "tenant.displayName",
+    "tenant.legalName",
+    "tenant.logo",
+    "tenant.content",
+    "tenant.media",
+    "tenant.navigation",
+    "tenant.theme.safeColorOverrides",
+    "tenant.theme.fontPairFromCatalog",
+    "tenant.theme.iconPackFromCatalog"
+  ],
+  "protected": [
+    "colorScheme.light-only",
+    "release-based-publication",
+    "layout-catalog-only",
+    "no-raw-css",
+    "no-raw-javascript",
+    "tenant-isolation",
+    "accessibility-focus-and-reduced-motion"
+  ]
+}

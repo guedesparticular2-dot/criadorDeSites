@@ -1,0 +1,40 @@
+node_modules/
+**/node_modules/
+.pnpm-store/
+.next/
+**/.next/
+dist/
+**/dist/
+build/
+**/build/
+coverage/
+**/coverage/
+.turbo/
+**/.turbo/
+*.tsbuildinfo
+
+# Environment values and local secrets; explicitly keep only safe examples.
+.env
+.env.*
+!.env.example
+!**/.env.example
+!infra/*.env.example
+
+# Local runtime data, backups, logs and editor/OS artifacts.
+uploads/
+**/uploads/
+backups/
+**/backups/
+*.dump
+**/*.dump
+*.log
+**/*.log
+.DS_Store
+**/.DS_Store
+
+# Local package-manager/planning scratch and unused root-level source drops.
+.planning/.active_plan
+/*.png
+/*.jpg
+/*.jpeg
+/*.mp4

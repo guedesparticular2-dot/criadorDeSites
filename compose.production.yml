@@ -1,0 +1,74 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: infra/docker/web.Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL:?Defina APP_URL}
+      DATABASE_URL: ${DATABASE_URL:?Defina DATABASE_URL com o usuário de runtime}
+      MFA_ENCRYPTION_KEY: ${MFA_ENCRYPTION_KEY:?Defina uma chave MFA exclusiva}
+      RLS_CONTEXT_KEY_ID: ${RLS_CONTEXT_KEY_ID:?Defina o identificador da chave HMAC web}
+      RLS_CONTEXT_HMAC_KEY: ${RLS_CONTEXT_HMAC_KEY:?Defina a chave HMAC web}
+      MEDIA_ROOT: /data/uploads
+      MEDIA_DISK_STOP_PERCENT: "80"
+    volumes:
+      - media_data:/data/uploads
+    networks:
+      - app
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/v1/health').then(r=>process.exit(r.ok ? 0 : 1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  worker:
+    build:
+      context: .
+      dockerfile: infra/docker/worker.Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      APP_URL: ${APP_URL:?Defina APP_URL}
+      DATABASE_URL: ${DATABASE_URL:?Defina DATABASE_URL com o usuário de runtime}
+      RLS_SYSTEM_CONTEXT_KEY_ID: ${RLS_SYSTEM_CONTEXT_KEY_ID:?Defina o identificador da chave HMAC worker}
+      RLS_SYSTEM_CONTEXT_HMAC_KEY: ${RLS_SYSTEM_CONTEXT_HMAC_KEY:?Defina a chave HMAC worker}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-console}
+      EMAIL_FROM: ${EMAIL_FROM:-contato@example.com}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MEDIA_ROOT: /data/uploads
+      MEDIA_DISK_STOP_PERCENT: "80"
+    volumes:
+      - media_data:/data/uploads
+    networks:
+      - app
+
+  proxy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      APP_DOMAINS: ${APP_DOMAINS:?Defina os domínios públicos}
+      TLS_EMAIL: ${TLS_EMAIL:?Defina o e-mail de operação TLS}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./infra/proxy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - app
+    depends_on:
+      web:
+        condition: service_healthy
+
+networks:
+  app:
+
+volumes:
+  media_data:
+  caddy_data:
+  caddy_config:
