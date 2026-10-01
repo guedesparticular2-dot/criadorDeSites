@@ -10,7 +10,7 @@
 4. Concluído: os quatro arquivos em `infra/secrets/` foram gerados no próprio VPS com modo `0600`; chaves HMAC separadas e chave MFA aleatória. Falta incluir as chaves de recuperação MFA em backup externo criptografado.
 5. Pendente: configurar `EMAIL_PROVIDER=resend`, remetente verificado `Baixada Futsal Clube <nao-responda@baixadafc.com.br>`, `EMAIL_REPLY_TO=baixadafc5@gmail.com` e chave exclusiva do Baixada. Não reutilizar chave de outro projeto.
 6. Volume local de mídia criado; backups externos, alertas de disco e teste de restauração pendentes antes de receber uploads reais.
-7. Pendente: confirmar o primeiro tenant e seu administrador; apontar apex por A para o IPv4 da VPS e `www` por CNAME para apex; após propagação, adicionar rotas isoladas no Traefik e testar TLS/redirect.
+7. Pendente: provisionar o primeiro tenant e seu administrador (consulta de 2026-10-01 retornou zero tenants e contratos); apontar apex por A para o IPv4 da VPS e `www` por CNAME para apex; após propagação, adicionar rotas isoladas no Traefik e testar TLS/redirect.
 
 ## Verificação local do Compose
 
