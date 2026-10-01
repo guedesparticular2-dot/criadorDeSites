@@ -1,6 +1,6 @@
 # Preparação de produção — VPS
 
-`compose.production.yml` define web, worker e PostgreSQL dedicado do Baixada. A stack está implantada em modo privado em `/srv/apps/baixada`: Postgres 17, 15 migrações e runtime healthy na revisão `c0b7418ad84a`. O operador confirmou que criou o Superusuário e concluiu o MFA em 2026-10-01. O banco não publica porta; a rede do banco é interna. A web só está exposta em `127.0.0.1:13002` para bootstrap por túnel SSH; nenhuma rota pública foi adicionada ao Traefik. Isso ainda não é homologação para clientes.
+`compose.production.yml` define web, worker e PostgreSQL dedicado do Baixada. A stack está implantada em modo privado em `/srv/apps/baixada`: Postgres 17, 15 migrações e runtime healthy; a imagem web `16940b9` está ativa desde 2026-10-01. O operador confirmou que criou o Superusuário e concluiu o MFA. O banco não publica porta; a rede do banco é interna. A web só está exposta em `127.0.0.1:13002` para acesso por túnel SSH; nenhuma rota pública foi adicionada ao Traefik. Isso ainda não é homologação para clientes.
 
 ## Antes de subir
 
