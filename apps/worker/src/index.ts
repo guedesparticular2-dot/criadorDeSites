@@ -3,8 +3,8 @@ import { mkdir, rename, rm, stat } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import postgres from "postgres";
 import sharp from "sharp";
-import { processPlatformOperations } from "./platform-operations";
-import { setSystemRlsContext } from "./rls-context";
+import { processPlatformOperations } from "./platform-operations.js";
+import { setSystemRlsContext } from "./rls-context.js";
 
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) throw new Error("DATABASE_URL is required");

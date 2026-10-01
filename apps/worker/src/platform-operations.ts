@@ -2,7 +2,7 @@ import { readdir, stat } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { randomUUID } from "node:crypto";
 import postgres from "postgres";
-import { setSystemRlsContext } from "./rls-context";
+import { setSystemRlsContext } from "./rls-context.js";
 
 type TenantOperation = { id: string; slug: string };
 type Usage = { activeUsers: number; publishedPages: number; storageBytes: bigint };
