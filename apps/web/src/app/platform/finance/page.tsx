@@ -31,7 +31,7 @@ export default async function PlatformFinancePage({ searchParams }: { searchPara
   const tenantsWithContracts = data.tenants.filter((tenant) => tenant.planCode);
   const openCharges = data.charges.filter((charge) => Number(charge.outstandingAmount) > 0);
 
-  return <AdminShell platform userName={user.displayName}>
+  return <AdminShell platform userName={user.displayName} activeSection="finance">
     <main className="admin-content">
       <div className="admin-title"><div><span className="eyebrow dark">OPERAÇÃO DA PLATAFORMA</span><h1>Financeiro e operação.</h1><p>Controle manual em BRL, contratos versionados e suspensão independente do status financeiro.</p></div><div className="admin-title-actions"><Link className="button button-secondary" href="/platform">Instâncias</Link><Link className="button button-secondary" href="/platform/suporte">Suporte</Link></div></div>
       {params.erro && <p className="form-error">{params.erro}</p>}

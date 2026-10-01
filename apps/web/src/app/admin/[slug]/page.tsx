@@ -33,7 +33,7 @@ export default async function TenantAdminPage({ params, searchParams }: { params
     return `${new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 }).format(scaled)} ${unit}`;
   };
   return (
-    <AdminShell tenantName={tenant.displayName} userName={user.displayName} platform={user.isSuperuser}>
+    <AdminShell tenantName={tenant.displayName} tenantSlug={tenant.slug} userName={user.displayName} isSuperuser={user.isSuperuser} activeSection="overview">
       <main className="admin-content">
         <div className="admin-title"><div><span className="eyebrow dark">INSTÂNCIA ATUAL</span><h1>{tenant.displayName}</h1><p>{limitedSuspendedAccess ? "O acesso está limitado enquanto a instância estiver suspensa." : "Altere a identidade do clube e publique uma nova configuração de aparência."}</p></div><div className="admin-title-actions">{!limitedSuspendedAccess && <><Link className="button button-secondary" href={`/admin/${tenant.slug}/conteudo`}>Conteúdo</Link><Link className="button button-secondary" href={`/admin/${tenant.slug}/midia`}>Mídia</Link><Link className="button button-secondary" href={`/admin/${tenant.slug}/moderacao`}>Moderação</Link><Link className="button button-secondary" href={`/admin/${tenant.slug}/pessoas`}>Pessoas</Link></>}{user.isSuperuser && <Link className="button button-secondary" href="/platform">Plataforma</Link>}</div></div>
         {atualizado && <p className="form-success">Aparência publicada. A versão anterior foi preservada no histórico.</p>}
@@ -43,7 +43,7 @@ export default async function TenantAdminPage({ params, searchParams }: { params
           <div className="tenant-usage-summary"><span>{overview.usage.activeUsers}/{entitlement.active_users ?? "∞"} usuários aprovados</span><span>{overview.usage.publishedPages}/{entitlement.published_pages ?? "∞"} páginas publicadas</span><span>{formatBytes(overview.usage.storageBytes)}/{entitlement.storage_bytes == null ? "∞" : formatBytes(String(entitlement.storage_bytes))}</span></div>
           {overview.notifications.length ? <ol className="tenant-notifications">{overview.notifications.map((notification) => <li key={notification.id}><b>{String(notification.payload.title ?? notification.type)}</b><p>{String(notification.payload.body ?? "")}</p><small>{new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(notification.createdAt)}</small></li>)}</ol> : <p>Nenhum aviso operacional pendente.</p>}
         </section>}
-        <section className="panel form-panel">
+        <section className="panel form-panel" id="aparencia">
           <header><div><span className="eyebrow dark">APARÊNCIA</span><h2>Identidade do tenant</h2></div><span className="release-live">PUBLICADO</span></header>
           <form action={updateAppearanceAction} className="form-grid">
             <input type="hidden" name="slug" value={tenant.slug} />
@@ -60,7 +60,7 @@ export default async function TenantAdminPage({ params, searchParams }: { params
             {!auditEvents.length && <li><div><b>Nenhuma alteração registrada.</b><small>As próximas publicações aparecerão aqui.</small></div></li>}
           </ol>
         </section>
-        <section className="panel"><header><div><span className="eyebrow dark">PRÓXIMA FATIA</span><h2>Conteúdo e releases</h2></div></header><p>O tenant já possui tema, domínio, Administrador Principal e release inicial. A próxima tela conectará notícias, agenda, partidas e páginas a essa release.</p></section>
+        <section className="panel"><header><div><span className="eyebrow dark">FERRAMENTAS EDITORIAIS</span><h2>Publique as primeiras histórias.</h2></div><Link className="button button-secondary" href={`/admin/${tenant.slug}/conteudo`}>Abrir conteúdo</Link></header><p>Notícias, enquetes e avisos já podem ser preparados e publicados pela área de Conteúdo. O editor de páginas institucionais e menus ainda não está disponível; não há mudanças nele até concluirmos essa próxima entrega.</p></section>
         </>}
       </main>
     </AdminShell>

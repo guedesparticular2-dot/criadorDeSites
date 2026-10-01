@@ -13,7 +13,7 @@ Este é o registro específico do projeto. O guia institucional disponível no w
 | Capacidade observada | 2 vCPU, 3.6 GiB RAM (1.2 GiB disponíveis no momento da consulta), disco raiz 98 GiB com 54 GiB livres (43% usado); banda contratada não verificada |
 | Plataforma/proxy observado | Docker Compose e Traefik compartilhado ativo nas portas públicas 80/443; vários serviços de outros projetos compartilham a VPS |
 | Protocolo institucional de deploy atual | Não há runbook atualizado localizado. Evidência observada: Docker Compose, aplicações em `/srv/apps`, rede externa `servicos-padrao` e arquivo dinâmico do Traefik em `/srv/servicos-padrao/dynamic.yml`, com recarga automática. |
-| Projeto Baixada / PostgreSQL | Implantação privada em `2026-10-01`; Compose dedicado, PostgreSQL 17 healthy, 15 migrações aplicadas, web e worker ativos. Ainda sem tenant e Superusuário. |
+| Projeto Baixada / PostgreSQL | Implantação privada em `2026-10-01`; Compose dedicado, PostgreSQL 17 healthy, 15 migrações aplicadas, web e worker ativos. Superusuário e MFA configurados pelo operador em `2026-10-01`; existência do tenant inicial ainda precisa ser confirmada. |
 | Repositório remoto / branch | `https://github.com/guedesparticular2-dot/criadorDeSites.git`, branch `main`; imagens da revisão `c0b7418ad84a`. |
 | Caminho operacional | `/srv/apps/baixada`; segredos sob `infra/secrets/`, root-only, modo `0600`. |
 | E-mail para TLS | Usar o endereço operacional do proxy já configurado; certificado é gerido pelo Traefik compartilhado. |
@@ -25,7 +25,7 @@ Este é o registro específico do projeto. O guia institucional disponível no w
 - Serviço `web`: Next.js standalone, escuta internamente na porta `3000`.
 - Serviço `worker`: outbox e trabalhos assíncronos; compartilha o volume persistente `media_data` com `web`.
 - O servidor já possui Traefik compartilhado escutando em 80/443, ligado à rede `servicos-padrao`; o arquivo dinâmico observado usa o provider de arquivo com watch e ACME TLS challenge. O Compose do Baixada não publica portas públicas nem inicia outro proxy. A porta web `13002` fica presa a `127.0.0.1` apenas para o bootstrap privado por túnel SSH; depois da configuração inicial pode ser removida.
-- Estado em 2026-10-01: os três serviços estão no VPS (`baixada-postgres-1`, `baixada-web-1`, `baixada-worker-1`). Healthcheck `/api/v1/health` retornou HTTP 200; `/setup` respondeu 200 pelo túnel. A conta Superusuário ainda não foi criada.
+- Estado em 2026-10-01: os três serviços estão no VPS (`baixada-postgres-1`, `baixada-web-1`, `baixada-worker-1`). Healthcheck `/api/v1/health` retornou HTTP 200; `/setup` respondeu 200 pelo túnel. O operador confirmou a criação do Superusuário e configuração de MFA; a criação do primeiro tenant ainda precisa ser verificada.
 - Healthcheck web: `/api/v1/health` verifica processo/HTTP, não a conexão PostgreSQL; o banco deve ser validado separadamente no smoke pós-deploy. O worker não expõe health endpoint próprio no momento.
 - PostgreSQL deve ser um serviço privado e dedicado ao Baixada. Não publicar sua porta na Internet nem reutilizar banco de outro projeto.
 - O VPS usa volumes persistentes nomeados e segredos root-only. A mídia e WAL ainda estão apenas no disco da VPS; configurar e testar cópia externa antes de aceitar dados de usuários.
@@ -56,7 +56,8 @@ O banco local `baixada` recebeu a migração 0015 depois de um dump validado e f
 - [ ] Verificar `baixadafc.com.br` no Resend, configurar `nao-responda@baixadafc.com.br`, usar Reply-To `baixadafc5@gmail.com`, criar chave API exclusiva do Baixada e testar entrega. Não reutilizar chaves de outros projetos.
 - [ ] Autorizar o destino Google Drive `baixadafc5@gmail.com` (a sessão Drive atualmente conectada é outra conta), configurar backups criptografados externamente: PostgreSQL diário + WAL até 5 minutos, mídia diária, retenção 30 diários/12 mensais; restaurar em ambiente isolado e medir RPO/RTO.
 - [x] Validar Compose e builds, incluindo arquitetura amd64; corrigir falhas reais do worker ESM e bind do Next encontradas no teste operacional.
-- [ ] Executar cadastro de Superusuário e MFA, testes reais de isolamento/RLS, leitura/escrita autorizada e depois teste externo; o smoke HTTP local passou, mas não substitui homologação multi-tenant.
+- [x] Executar cadastro de Superusuário e MFA pelo bootstrap privado (confirmado pelo operador em 2026-10-01).
+- [ ] Confirmar provisionamento do primeiro tenant e executar testes reais de isolamento/RLS, leitura/escrita autorizada e depois teste externo; o smoke HTTP local passou, mas não substitui homologação multi-tenant.
 - [ ] Definir janela, commit/imagem anterior e rollback; registrar versão, resultado e responsável.
 
 ## Informações necessárias para executar o deploy

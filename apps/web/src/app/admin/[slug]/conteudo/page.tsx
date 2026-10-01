@@ -20,7 +20,7 @@ export default async function ContentPage({ params, searchParams }: { params: Pr
   const content = await listTenantContent(tenant.id, user.id);
   const { rascunho, publicado, enquete, aviso, erro } = await searchParams;
   return (
-    <AdminShell tenantName={tenant.displayName} userName={user.displayName} platform={user.isSuperuser}>
+    <AdminShell tenantName={tenant.displayName} tenantSlug={tenant.slug} userName={user.displayName} isSuperuser={user.isSuperuser} activeSection="content">
       <main className="admin-content">
         <div className="admin-title"><div><span className="eyebrow dark">CONTEÚDO</span><h1>Histórias do clube.</h1><p>Crie rascunhos sem mexer no site. A publicação troca a release pública de uma só vez.</p></div><Link className="button button-secondary" href={`/admin/${slug}`}>Voltar ao painel</Link></div>
         {rascunho && <p className="form-success">Rascunho salvo. Ele ainda não está visível no site.</p>}

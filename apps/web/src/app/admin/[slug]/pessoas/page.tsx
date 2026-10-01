@@ -28,7 +28,7 @@ export default async function PeoplePage({ params, searchParams }: { params: Pro
     : {};
   const { atualizado, erro, convite, permissao } = search;
   return (
-    <AdminShell tenantName={tenant.displayName} userName={user.displayName} platform={user.isSuperuser}>
+    <AdminShell tenantName={tenant.displayName} tenantSlug={tenant.slug} userName={user.displayName} isSuperuser={user.isSuperuser} activeSection="people">
       <main className="admin-content">
         <div className="admin-title"><div><span className="eyebrow dark">PESSOAS</span><h1>Vínculos e acessos.</h1><p>Aprove cadastros, nomeie administradores e suspenda vínculos sem afetar outras instâncias.</p></div><Link className="button button-secondary" href={`/admin/${slug}`}>Voltar ao painel</Link></div>
         {atualizado && <p className="form-success">Alteração registrada e auditada.</p>}{convite && <p className="form-success">Convite criado e encaminhado para a fila segura de e-mail.</p>}{permissao && <p className="form-success">Permissão atualizada e auditada.</p>}{erro && <p className="form-error">{erro}</p>}

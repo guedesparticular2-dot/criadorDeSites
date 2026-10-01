@@ -11,7 +11,7 @@ export default async function PlatformPage({ searchParams }: { searchParams: Pro
   const [tenants, members, search] = await Promise.all([listTenants(user.id), listApprovedTenantMembers(user.id), searchParams]);
   const { criada, erro, transferido } = search;
   return (
-    <AdminShell platform userName={user.displayName}>
+    <AdminShell platform userName={user.displayName} activeSection="overview">
       <main className="admin-content">
         <div className="admin-title"><div><span className="eyebrow dark">OPERAÇÃO DA PLATAFORMA</span><h1>Clientes e instâncias.</h1><p>Provisionamento real e isolado por tenant.</p></div><div className="admin-title-actions"><Link className="button button-secondary" href="/platform/finance">Financeiro e operação</Link><Link className="button button-secondary" href="/platform/domains">Domínios</Link><Link className="button button-secondary" href="/platform/suporte">Suporte técnico</Link></div></div>
         {criada && <p className="form-success">Instância <b>{criada}</b> criada com tema-base, Administrador Principal e release inicial.</p>}

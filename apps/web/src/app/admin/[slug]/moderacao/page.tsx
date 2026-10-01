@@ -17,7 +17,7 @@ export default async function ModerationPage({ params, searchParams }: { params:
   if (canModerateComments && tenant) canManageMedia = await (async () => { try { await requireTenantPermission(slug, user, "media.upload"); return true; } catch { return false; } })();
   const [media, consents, cases] = await Promise.all([canManageMedia ? listTenantMedia(tenant.id, user.id) : Promise.resolve([]), canManageMedia ? listMediaConsents(tenant.id, user.id) : Promise.resolve([]), canModerateComments || canManageMedia ? listModerationCases(tenant.id, user.id, { includeComments: canModerateComments, includeMedia: canManageMedia }) : Promise.resolve([])]);
   const { consentimento, revogado, oculto, moderado, erro } = await searchParams;
-  return <AdminShell tenantName={tenant.displayName} userName={user.displayName} platform={user.isSuperuser}><main className="admin-content">
+  return <AdminShell tenantName={tenant.displayName} tenantSlug={tenant.slug} userName={user.displayName} isSuperuser={user.isSuperuser} activeSection="moderation"><main className="admin-content">
     <div className="admin-title"><div><span className="eyebrow dark">PROTEÇÃO E CONVIVÊNCIA</span><h1>Moderação do clube.</h1><p>Analise denúncias de comentários e mídias dentro da permissão recebida; todas as decisões ficam auditadas.</p></div><Link className="button button-secondary" href={`/admin/${slug}`}>Voltar ao painel</Link></div>
     {(consentimento || revogado || oculto || moderado) && <p className="form-success">A operação foi registrada e auditada.</p>}{erro && <p className="form-error">{erro}</p>}
     {canManageMedia && <>

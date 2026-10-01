@@ -179,7 +179,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .sidebar-user div { display: grid; }
 .sidebar-user b { font-size: 12px; }.sidebar-user small { color: #8398a5; font-size: 10px; }
 .admin-main { min-width: 0; }
-.admin-topbar { min-height: 62px; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 0 24px; background: white; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+.admin-topbar { position: sticky; top: 0; z-index: 20; min-height: 62px; display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 0 24px; background: white; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 11px; }
 .admin-topbar > div { display: flex; align-items: center; gap: 8px; }.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #36a373; }
 .admin-topbar nav { display: flex; align-items: center; gap: 16px; }.admin-topbar nav a { font-weight: 700; color: var(--navy-900); }.admin-topbar button { width: 34px; height: 34px; border: 1px solid var(--line); background: white; font-size: 9px; }
 .admin-content { padding: 38px 22px 60px; }

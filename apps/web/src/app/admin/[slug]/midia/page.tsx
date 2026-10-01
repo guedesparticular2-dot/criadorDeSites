@@ -20,7 +20,7 @@ export default async function MediaPage({ params, searchParams }: { params: Prom
   const media = await listTenantMedia(tenant.id, user.id);
   const { enviado, erro } = await searchParams;
   return (
-    <AdminShell tenantName={tenant.displayName} userName={user.displayName} platform={user.isSuperuser}>
+    <AdminShell tenantName={tenant.displayName} tenantSlug={tenant.slug} userName={user.displayName} isSuperuser={user.isSuperuser} activeSection="media">
       <main className="admin-content">
         <div className="admin-title"><div><span className="eyebrow dark">MÍDIA</span><h1>Biblioteca segura.</h1><p>O original fica temporário até que todas as variantes obrigatórias sejam processadas.</p></div><Link className="button button-secondary" href={`/admin/${slug}`}>Voltar ao painel</Link></div>
         {enviado && <p className="form-success">Imagem recebida e encaminhada para a fila de processamento.</p>}
